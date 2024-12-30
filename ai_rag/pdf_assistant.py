@@ -5,6 +5,7 @@ from phi.model.groq import Groq
 from phi.storage.agent.postgres import PgAgentStorage
 from phi.knowledge.pdf import PDFUrlKnowledgeBase
 from phi.vectordb.pgvector import PgVector
+from phi.embedder.google import GeminiEmbedder
 
 import os
 from dotenv import load_dotenv
@@ -13,10 +14,14 @@ load_dotenv()
 # Create a pgvector database (postgresql)
 db_url = "postgresql+psycopg://ai:ai@localhost:5532/ai"
 
+
 # Create a knowledge base from a PDF file and add VectorDB
 knowledge_base = PDFUrlKnowledgeBase(
     urls=["https://phi-public.s3.amazonaws.com/recipes/ThaiRecipes.pdf"],
-    vector_db = PgVector(table_name="recipes", db_url=db_url)
+    vector_db = PgVector(table_name="recipes", 
+                         db_url=db_url,
+                         embedder=GeminiEmbedder(model= "models/text-embedding-004",api_key=os.getenv('GEMINI_API_KEY'))
+    )
 )
 
 knowledge_base.load()
