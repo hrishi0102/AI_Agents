@@ -29,7 +29,7 @@ storage = PgAgentStorage(table_name="pdf_assistant", db_url=db_url)
 agent = Agent(
     model= Groq(id="llama3-groq-70b-8192-tool-use-preview", api_key=os.getenv('GROQ_API_KEY')),
     storage = storage,
-    knowledge_base = knowledge_base,
+    knowledge = knowledge_base,
     show_tool_calls=True,
     search_knowledge=True,
     read_chat_history=True,
