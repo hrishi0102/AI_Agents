@@ -5,7 +5,9 @@ from phi.model.groq import Groq
 from phi.storage.agent.postgres import PgAgentStorage
 from phi.knowledge.pdf import PDFUrlKnowledgeBase
 from phi.vectordb.pgvector import PgVector
-from phi.embedder.google import GeminiEmbedder
+# from phi.embedder.google import GeminiEmbedder
+from phi.embedder.voyageai import VoyageAIEmbedder
+
 
 import os
 from dotenv import load_dotenv
@@ -20,11 +22,12 @@ knowledge_base = PDFUrlKnowledgeBase(
     urls=["https://phi-public.s3.amazonaws.com/recipes/ThaiRecipes.pdf"],
     vector_db = PgVector(table_name="recipes", 
                          db_url=db_url,
-                         embedder=GeminiEmbedder(model= "models/text-embedding-004",api_key=os.getenv('GEMINI_API_KEY'))
+                         embedder=VoyageAIEmbedder(model="voyage-3",api_key=os.getenv('VOYAGE_API_KEY')),
+                         #embedder=GeminiEmbedder(model= "models/text-embedding-004",api_key=os.getenv('GEMINI_API_KEY'))
     )
 )
 
-knowledge_base.load()
+knowledge_base.load(recreate=False)
 
 # Create a storage for agent data
 # Store Agent sessions in a database like PostgreSQL.
@@ -44,6 +47,8 @@ agent = Agent(
 agent.print_response("How do I make pad thai?", markdown=True)
 
 
+
+## For CLI interface
 # def pdf_assistant(user: str = "user"):
 # run_id: Optional[str] = None
 
