@@ -5,8 +5,8 @@ from phi.model.groq import Groq
 from phi.storage.agent.postgres import PgAgentStorage
 from phi.knowledge.pdf import PDFUrlKnowledgeBase
 from phi.vectordb.pgvector import PgVector
-# from phi.embedder.google import GeminiEmbedder
-from phi.embedder.voyageai import VoyageAIEmbedder
+from phi.embedder.google import GeminiEmbedder
+# from phi.embedder.voyageai import VoyageAIEmbedder
 
 
 import os
@@ -22,8 +22,8 @@ knowledge_base = PDFUrlKnowledgeBase(
     urls=["https://phi-public.s3.amazonaws.com/recipes/ThaiRecipes.pdf"],
     vector_db = PgVector(table_name="recipes", 
                          db_url=db_url,
-                         embedder=VoyageAIEmbedder(model="voyage-3",api_key=os.getenv('VOYAGE_API_KEY')),
-                         # embedder=GeminiEmbedder(api_key=os.getenv('GEMINI_API_KEY'), dimensions=1536),
+                        #  embedder=VoyageAIEmbedder(model="voyage-3",api_key=os.getenv('VOYAGE_API_KEY')),
+                         embedder=GeminiEmbedder(api_key=os.getenv('GEMINI_API_KEY'), dimensions=1536),
     )
 )
 
