@@ -23,7 +23,7 @@ knowledge_base = PDFUrlKnowledgeBase(
     vector_db = PgVector(table_name="recipes", 
                          db_url=db_url,
                         #  embedder=VoyageAIEmbedder(model="voyage-3",api_key=os.getenv('VOYAGE_API_KEY')),
-                         embedder=GeminiEmbedder(api_key=os.getenv('GEMINI_API_KEY'), dimensions=1536),
+                         embedder=GeminiEmbedder(api_key=os.getenv('GEMINI_API_KEY'), dimensions=768),
     )
 )
 
@@ -35,7 +35,7 @@ storage = PgAgentStorage(table_name="pdf_assistant", db_url=db_url)
 
 # Create the agent
 agent = Agent(
-    model= Groq(id="llama3-groq-70b-8192-tool-use-preview", api_key=os.getenv('GROQ_API_KEY')),
+    model= Groq(id="llama-3.3-70b-versatile", api_key=os.getenv('GROQ_API_KEY')),
     storage = storage,
     knowledge = knowledge_base,
     show_tool_calls=True,
