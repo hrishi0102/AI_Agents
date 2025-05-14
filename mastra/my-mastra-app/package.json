@@ -19,6 +19,7 @@
     "@ai-sdk/google": "^1.2.18",
     "@mastra/core": "^0.9.4-alpha.4",
     "@mastra/libsql": "^0.0.4-alpha.4",
+    "@mastra/mcp": "^0.5.0",
     "@mastra/memory": "^0.3.4-alpha.4",
     "zod": "^3.24.4"
   },
