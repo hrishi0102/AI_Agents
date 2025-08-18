@@ -1,8 +1,12 @@
+# Checkpoint is basically a built-in persistance layer.
+# When you compile a graph with checkpointer it saves a checkpoint of graph state at every super step
+
 from typing_extensions import TypedDict
 from typing import Annotated
 from langchain.chat_models import init_chat_model
 from langgraph.graph.message import add_messages
 from langgraph.graph import StateGraph, START, END
+from langgraph.checkpoint.mongodb import MongoDBSaver
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
