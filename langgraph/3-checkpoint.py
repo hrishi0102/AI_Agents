@@ -17,6 +17,10 @@ class State(TypedDict):
 
 llm = init_chat_model("anthropic:claude-3-5-sonnet-latest")
 
+def compile_graph_with_checkpointer(checkpointer):
+    graph_with_checkpointer = graph_builder.compile(checkpointer=checkpointer)
+    return graph_with_checkpointer
+
 def chat_node(state: State):
     response = llm.invoke(state["messages"])
     return {"messages": [response]}
@@ -29,9 +33,15 @@ graph_builder.add_edge("chat_node", END)
 graph = graph_builder.compile()
 
 def main():
-    query = input(">: ")
-    _state = {"messages": [{"role": "user", "content": query}]}
-    graph_result = graph.invoke(_state)
-    print("graph_result:", graph_result)
+    DB_URI = "mongodb://admin:password@localhost:27017"
+    config = {"configurable": {"thread_id": "2"}}
+    print("Connecting to MongoDB...")
+    with MongoDBSaver.from_conn_string(DB_URI) as mongo_checkpointer:
+        graph_with_mongo = compile_graph_with_checkpointer(mongo_checkpointer)
+        print("Graph compiled with MongoDB checkpointer")
+        query = input(">: ")
+        _state = {"messages": [{"role": "user", "content": query}]}
+        graph_result = graph_with_mongo.invoke(_state,config)
+        print("graph_result:", graph_result)
 
 main()
