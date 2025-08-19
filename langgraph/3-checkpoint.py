@@ -1,5 +1,6 @@
 # Checkpoint is basically a built-in persistance layer.
 # When you compile a graph with checkpointer it saves a checkpoint of graph state at every super step
+# We use thread_id to manage different user sessions
 
 from typing_extensions import TypedDict
 from typing import Annotated

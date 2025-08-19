@@ -41,8 +41,8 @@ def classify_message(state: State):
     - Return only a single JSON object
     The message to classify is: 
     """
-    llm_response = client.beta.chat.completions.parse(
-        model="claude-sonnet-4-0",
+    llm_response = gemini_client.beta.chat.completions.parse(
+        model="gemini-2.5-flash",
         response_format=ClassifyMessageResponse,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
@@ -113,7 +113,7 @@ def main():
 
     # graph_result = graph.invoke(_state)  # Uncomment this line if you want to use invoke directly
     # print("graph_result:", graph_result)
-    
+
     # Add streaming
     for event in graph.stream(_state):
         print("Event:", event)
