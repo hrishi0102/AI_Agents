@@ -110,7 +110,12 @@ def main():
         "result": None,
         "is_coding": None
     }
-    graph_result = graph.invoke(_state)
-    print("graph_result:", graph_result)
+
+    # graph_result = graph.invoke(_state)  # Uncomment this line if you want to use invoke directly
+    # print("graph_result:", graph_result)
+    
+    # Add streaming
+    for event in graph.stream(_state):
+        print("Event:", event)
 
 main()
