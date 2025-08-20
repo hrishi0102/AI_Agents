@@ -3,18 +3,35 @@ from typing import Annotated, Literal
 from langchain.chat_models import init_chat_model
 from langgraph.graph.message import add_messages
 from langgraph.graph import StateGraph, START, END
+from langchain_core.tools import tool
+import requests
 from dotenv import load_dotenv
 import os
 load_dotenv()
 
 llm = init_chat_model("anthropic:claude-3-5-sonnet-latest")
 
+@tool()
+def get_weather(city:str):
+    """This tool fetches the current weather for a given city."""
+    url = f"https://wttr.in/{city}?format=%C+%t"
+    print(f"Fetching weather for {city}...")
+    response = requests.get(url)
+    if response.status_codec == 200:
+        return response
+    else:
+        return "Error fetching weather data"
+
+tools = [get_weather]
+llm_with_tools = llm.bind_tools(tools)
+
 class State(TypedDict):
     messages: Annotated[list, add_messages]
 
 def chatbot(state: State):
-    message = llm.invoke(state["messages"])
+    message = llm_with_tools.invoke(state["messages"])
     return {"messages": [message]}
+
 
 graph_builder = StateGraph(State)
 graph_builder.add_node("chatbot", chatbot)
