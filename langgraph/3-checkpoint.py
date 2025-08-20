@@ -31,6 +31,7 @@ graph_builder.add_node("chat_node", chat_node)
 graph_builder.add_edge(START, "chat_node")
 graph_builder.add_edge("chat_node", END)
 
+# Use this graph when checkpointing not needed
 graph = graph_builder.compile()
 
 def main():
