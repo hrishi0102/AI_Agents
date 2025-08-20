@@ -1,7 +1,7 @@
 from typing_extensions import TypedDict
 from typing import Annotated, Literal
 from langchain.chat_models import init_chat_model
-from langraph.graph.message import add_messages
+from langgraph.graph.message import add_messages
 from langgraph.graph import StateGraph, START, END
 
 llm = init_chat_model("anthropic:claude-3-5-sonnet-latest")
@@ -25,3 +25,5 @@ def main():
     state = {"messages": [{"role": "user", "content": user_input}]}
     response = graph.invoke(state)
     print("Bot:", response["messages"][0]["content"])
+
+main()
