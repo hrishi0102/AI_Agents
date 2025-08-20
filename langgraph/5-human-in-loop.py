@@ -65,7 +65,7 @@ graph = graph_builder.compile()
 
 def user_chat():
     DB_URI = "mongodb://admin:password@localhost:27017"
-    config = {"configurable": {"thread_id": "3"}}
+    config = {"configurable": {"thread_id": "6"}}
     print("Connecting to MongoDB...")
     with MongoDBSaver.from_conn_string(DB_URI) as mongo_checkpointer:
         graph_with_mongo = compile_graph_with_checkpointer(mongo_checkpointer)
@@ -84,21 +84,21 @@ user_chat()
 # Human in loop interruption. Call when user_chat() last message is a tool call to human_assistance
 def admin_call():
     DB_URI = "mongodb://admin:password@localhost:27017"
-    config = {"configurable": {"thread_id": "3"}}
+    # config = {"configurable": {"thread_id": "5"}}
     print("Connecting to MongoDB...")
     with MongoDBSaver.from_conn_string(DB_URI) as mongo_checkpointer:
+        config = {"configurable": {"thread_id": "6"}, "checkpointer": mongo_checkpointer}
         graph_with_mongo = compile_graph_with_checkpointer(mongo_checkpointer)
-        state = graph_with_mongo.get_state(mongo_checkpointer)
+        state = graph_with_mongo.get_state(config=config)
         last_message = state.values['messages'][-1]
-        tool_calls = last_message.additional_kwargs.get('tool_calls', [])
+        tool_calls = getattr(last_message, "tool_calls", [])
         user_query = None
 
         for call in tool_calls:
-            if call.get("function", {}).get("name") == "human_assistance":
-                args = call["function"].get("arguments", {})
+            if call.get("name") == "human_assistance":
+                args = call.get("args", {})
                 try:
-                    args_dict = json.loads(args)
-                    user_query = args_dict.get("query")
+                    user_query = args.get("query")
                 except Exception as e:
                     print(f"Error extracting user query: {e}")
         print("User has a query:", user_query)
