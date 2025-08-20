@@ -115,7 +115,11 @@ def main():
     # print("graph_result:", graph_result)
 
     # Add streaming
-    for event in graph.stream(_state):
-        print("Event:", event)
+    # for event in graph.stream(_state):
+    #     print("Event:", event)
+    response = graph.stream(_state, stream_mode="values")
+    for event in response:
+        if "messages" in event:
+            event["messages"][-1].pretty_print()
 
 main()

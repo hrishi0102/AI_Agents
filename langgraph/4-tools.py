@@ -3,6 +3,9 @@ from typing import Annotated, Literal
 from langchain.chat_models import init_chat_model
 from langgraph.graph.message import add_messages
 from langgraph.graph import StateGraph, START, END
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 llm = init_chat_model("anthropic:claude-3-5-sonnet-latest")
 
@@ -23,7 +26,9 @@ graph = graph_builder.compile()
 def main():
     user_input = input("User: ")
     state = {"messages": [{"role": "user", "content": user_input}]}
-    response = graph.invoke(state)
-    print("Bot:", response["messages"][0]["content"])
+    response = graph.stream(state, stream_mode="values")
+    for event in response:
+        if "messages" in event:
+            event["messages"][-1].pretty_print()
 
 main()
