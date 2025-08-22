@@ -41,6 +41,14 @@ config = {
             "port": 6333,
             "embedding_model_dims": 768
         }
+    },
+    "graph-store": {
+        "provider": "neo4j",
+        "config": {
+            "url": "bolt://neo4j:7687",
+            "username": "neo4j",
+            "password": "password"
+        }
     }
 }
 
@@ -58,6 +66,7 @@ def chat():
 
         SYSTEM_PROMPT = f"You are a MEMORY AWARE helpful AI assistant. Here are some relevant memories for a specific user: {json.dumps(memories)}"
 
+        # Tip: Include last 5 messages+responses, memories(context) and query each time to have a good context.
         response = client.chat.completions.create(
             model="claude-sonnet-4-20250514",
             messages=[
