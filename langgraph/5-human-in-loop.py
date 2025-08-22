@@ -78,7 +78,7 @@ def user_chat():
                 if "messages" in event:
                     event["messages"][-1].pretty_print()
 
-user_chat()
+user_chat() 
 
 
 # Human in loop interruption. Call when user_chat() last message is a tool call to human_assistance
