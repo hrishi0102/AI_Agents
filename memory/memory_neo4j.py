@@ -7,14 +7,12 @@ from google import genai
 
 load_dotenv()
 
-client = OpenAI(
-    api_key=os.getenv("ANTHROPIC_API_KEY"),
-    base_url="https://api.anthropic.com/v1/"
-)
-
-
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+client = OpenAI(
+    api_key=OPENAI_API_KEY
+)
 
 # Mem0 opensource config
 config = {
@@ -26,11 +24,11 @@ config = {
             "model": "models/text-embedding-004"
         }
     },
-    "llm": {
-        "provider": "anthropic",
+    "llm" : {
+        "provider": "openai",
         "config": {
-            "api_key": ANTHROPIC_API_KEY,
-            "model": "claude-sonnet-4-20250514",
+            "model": "gpt-4o",
+            "temperature": 0.0,
         }
     },
     "vector_store": {
@@ -45,7 +43,7 @@ config = {
     "graph_store": {
         "provider": "neo4j",
         "config": {
-            "url": "bolt://neo4j:7687",
+            "url": "bolt://localhost:7687",
             "username": "neo4j",
             "password": "password"
         }
@@ -68,7 +66,7 @@ def chat():
 
         # Tip: Include last 5 messages+responses, memories(context) and query each time to have a good context.
         response = client.chat.completions.create(
-            model="claude-sonnet-4-20250514",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_input}
