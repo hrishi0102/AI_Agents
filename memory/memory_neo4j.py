@@ -41,6 +41,14 @@ config = {
             "port": 6333,
             "embedding_model_dims": 768
         }
+    },
+    "graph_store": {
+        "provider": "neo4j",
+        "config": {
+            "url": "bolt://neo4j:7687",
+            "username": "neo4j",
+            "password": "password"
+        }
     }
 }
 
