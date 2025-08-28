@@ -1,4 +1,7 @@
 import speech_recognition as sr
+from graph import graph
+from dotenv import load_dotenv
+load_dotenv()
 
 def main():
 
@@ -6,17 +9,15 @@ def main():
 
     with sr.Microphone() as source:    # Mic Access
         r.adjust_for_ambient_noise(source)   # Ambient Noise Adjustment
-        r.pause_threshold = 2
 
         print("Listening...")
         audio = r.listen(source)
-
-    try:
         print("Recognizing...")
         stt = r.recognize_google(audio)
         print(f"You said: {stt}")
-    except sr.UnknownValueError:
-        print("Sorry, I could not understand the audio.")
 
-if __name__ == "__main__":
-    main()
+        for event in graph.stream({"messages": [{"role": "user", "content": stt}]}):
+            if "messages" in event:
+                event["messages"][-1].pretty_print()
+
+main()
