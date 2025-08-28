@@ -27,11 +27,11 @@ llm = init_chat_model(model_provider="openai", model="gpt-4.1")
 llm_with_tools = llm.bind_tools(tools=available_tools)
 
 def chatbot(state: State):
-    SYSTEM_PROMPT = SystemMessage(content="You are a helpful assistant who takes input from user and based on avaiable tools you choose the correct tool and execute it. Always make sure your generated output and files are in the output/ folder. If not, please create folder.")
-    response = llm_with_tools.invoke([SYSTEM_PROMPT] + state["messages"])
-    return {"messages": response}
+    SYSTEM_PROMPT = SystemMessage(content="You are a helpful assistant who takes input from user and helps them. Based on avaiable tools you choose the correct tool and execute it. Always make sure your generated output and files are in the output/ folder. If not, please create folder.")
+    messages = llm_with_tools.invoke([SYSTEM_PROMPT] + state["messages"])
+    return {"messages": messages}
 
-tool_node = ToolNode(tools=available_tools)
+tool_node = ToolNode(tools=available_tools) 
 
 graph_builder = StateGraph(State)
 graph_builder.add_node("chatbot", chatbot)
