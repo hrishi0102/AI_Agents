@@ -2,6 +2,7 @@ import speech_recognition as sr
 from graph import graph
 from openai import AsyncOpenAI
 from openai.helpers import LocalAudioPlayer
+from langchain_core.messages import AIMessage
 from dotenv import load_dotenv
 import asyncio
 load_dotenv()
@@ -19,7 +20,7 @@ async def tts(text:str):
     ) as response:
         await LocalAudioPlayer().play(response)
 
-def main():
+async def main():
 
     r = sr.Recognizer()  # Speech to Text
 
@@ -34,7 +35,16 @@ def main():
 
         for event in graph.stream({"messages": [{"role": "user", "content": stt}]}, stream_mode="values"):
             if "messages" in event:
-                event["messages"][-1].pretty_print()
+                last_msg = event["messages"][-1]
 
-# main()
-asyncio.run(tts("Hello, how can I assist you today?")) 
+                # ✅ Only respond if the last message is from the Assistant
+                if isinstance(last_msg, AIMessage):
+                    assistant_reply_content = last_msg.content
+                    print(f"Assistant: {assistant_reply_content}")
+
+                    # 🔹 Speak the assistant’s reply
+                    await tts(assistant_reply_content)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
