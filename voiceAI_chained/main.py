@@ -10,6 +10,7 @@ load_dotenv()
 openai = AsyncOpenAI()
 messages = []
 
+# Text to Speech
 async def tts(text:str):
     async with openai.audio.speech.with_streaming_response.create(
         model="gpt-4o-mini-tts",
